@@ -126,7 +126,8 @@ def evaluate_coco(img_path, set_name, image_ids, coco, model, conf_threshold):
                 results.append(image_result)
 
     if not len(results):
-        raise Exception('the model does not provide any valid output, check model architecture and the data input')
+        print('the model does not provide any valid output, check model architecture and the data input')
+        return 0
         
 
     # write output
@@ -239,15 +240,15 @@ if __name__ == '__main__':
                     model.half()
                     
             #run the prediction of the bounding boxes and store results into a file
-            pineapples_detected = evaluate_coco(VAL_IMGS, SET_NAME, image_ids, coco_gt, model, conf_thres)
-            print("===============================================================")
-            print("Number of pineapples in validation:")
-            print(pineapples_detected)
-            print("===============================================================")
-    
+            pineapples_detected = evaluate_coco(VAL_IMGS, SET_NAME, image_ids, coco_gt, model, conf_thres)  
     
         #evaluate model using the ground truth and the predicted bounding boxes
-        p,r = _eval(coco_gt, image_ids, f'{SET_NAME}_bbox_results.json', max_detect_list)
+        if(pineapples_detected > 0):
+            p,r = _eval(coco_gt, image_ids, f'{SET_NAME}_bbox_results.json', max_detect_list)
+        else:
+            p = 0
+            r = 0
+            
         print()
         print("===============================================================")
         print("Precision:" + str(p))
