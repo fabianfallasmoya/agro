@@ -12,6 +12,7 @@ change compound_coef
 import json
 import os
 import numpy as np
+import psutil
 
 import argparse
 import torch
@@ -181,8 +182,17 @@ def _eval(coco_gt, image_ids, pred_json_path, max_detect_list):
     return precision_result, recall_result
 
 
+#LIMIT THE NUMBER OF CPU TO PROCESS THE JOB
+def throttle_cpu(cpu_list):
+    p = psutil.Process()
+    for i in p.threads():
+        temp = psutil.Process(i.id)
+        temp.cpu_affinity([i for i in cpu_list])
+
 #main method to be called
 if __name__ == '__main__':
+    throttle_cpu([28,29,30,31,32,33,34,35,36,37,38,39])
+    
     SET_NAME = params['val_set']
     VAL_GT = f'datasets/{params["project_name"]}/annotations/instances_{SET_NAME}.json'
     VAL_IMGS = f'datasets/{params["project_name"]}/{SET_NAME}/'
@@ -192,7 +202,7 @@ if __name__ == '__main__':
     
     #insert file header of results
     import csv
-    with open("./results.csv", "a") as myfile:
+    with open(f'results/{params["project_name"]}_results.csv', "w") as myfile:
         my_writer = csv.writer(myfile, delimiter=',', quotechar='"')
         my_writer.writerow(["max_detections_per_image", "nms_threshold", "confidence_threshold", "pineapples_detected", "precision", "recall", "f1_score"])
     
@@ -246,7 +256,7 @@ if __name__ == '__main__':
         print("===============================================================")
         
         #store results
-        with open("./results.csv", "a") as myfile:
+        with open(f'results/{params["project_name"]}_results.csv', "a") as myfile:
             my_writer = csv.writer(myfile, delimiter=',', quotechar='"')
             my_writer.writerow([max_detections, nms_threshold, conf_thres, pineapples_detected, p, r, f1_result])
     #--------------------------------------------
