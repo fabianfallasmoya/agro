@@ -245,15 +245,16 @@ if __name__ == '__main__':
         #evaluate model using the ground truth and the predicted bounding boxes
         if(pineapples_detected > 0):
             p,r = _eval(coco_gt, image_ids, f'{SET_NAME}_bbox_results.json', max_detect_list)
+            f1_result = (2.0 * p * r)/ (p + r)
         else:
             p = 0
             r = 0
+            f1_result = 0
             
         print()
         print("===============================================================")
         print("Precision:" + str(p))
         print("Recall:" + str(r))
-        f1_result = (2.0 * p * r)/ (p + r)
         print("===============================================================")
         
         #store results
