@@ -1,4 +1,6 @@
 """
+Author: Zylo117
+COCO-Style Evaluations
 
 put images here datasets/your_project_name/annotations/val_set_name/*.jpg
 put annotations here datasets/your_project_name/annotations/instances_{val_set_name}.json
@@ -202,7 +204,7 @@ if __name__ == '__main__':
     import csv
     with open(f'results/{params["project_name"]}_results.csv', "w") as myfile:
         my_writer = csv.writer(myfile, delimiter=',', quotechar='"')
-        my_writer.writerow(["max_detections_per_image", "nms_threshold", "confidence_threshold", "pineapples_detected", "precision", "recall", "f1_score"])
+        my_writer.writerow(["max_detections_per_image", "num_detections", "nms_threshold", "confidence_threshold", "pineapples_detected", "precision", "recall", "f1_score"])
     
     #create list for the max detections
     max_detect_list = []
@@ -256,5 +258,17 @@ if __name__ == '__main__':
         #store results
         with open(f'results/{params["project_name"]}_results.csv', "a") as myfile:
             my_writer = csv.writer(myfile, delimiter=',', quotechar='"')
-            my_writer.writerow([max_detections, nms_threshold, conf_thres, pineapples_detected, p, r, f1_result])
+            my_writer.writerow([max_detections, pineapples_detected, nms_threshold, conf_thres, pineapples_detected, p, r, f1_result])
     #--------------------------------------------
+    
+    #get the exact numbers of pineapples from the ground truth.
+    #read the json
+    import json
+    with open(VAL_GT, "r") as read_file:
+        data = json.load(read_file)
+
+    #write how many pineapples there are (ground truth bounding boxes) in the results file.
+    with open(f'results/{params["project_name"]}_results.csv', "a") as myfile:
+        my_writer = csv.writer(myfile, delimiter=',', quotechar='"')
+        my_writer.writerow([""])
+        my_writer.writerow(["Number of pineapples:", len(data["annotations"])])
