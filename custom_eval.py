@@ -1,6 +1,4 @@
 """
-Author: Zylo117
-COCO-Style Evaluations
 
 put images here datasets/your_project_name/annotations/val_set_name/*.jpg
 put annotations here datasets/your_project_name/annotations/instances_{val_set_name}.json
