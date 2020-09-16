@@ -301,9 +301,9 @@ def train(opt):
                     best_loss = loss
                     best_epoch = epoch
 
-                    save_checkpoint(model, f'efficientdet-d{opt.compound_coef}.pth')
-                    with open(os.path.join(opt.saved_path, "best_epoch.txt"), "a") as my_file: 
-                        my_file.write(f"Epoch:{epoch} / Step: {step}\n")
+                    save_checkpoint(model, f'efficientdet-d{opt.compound_coef}_trained_weights.pth')
+                    with open(os.path.join(opt.saved_path, f"best_epoch-d{opt.compound_coef}.txt"), "a") as my_file: 
+                        my_file.write(f"Epoch:{epoch} / Step: {step} / Loss: {best_loss}\n") 
 
 
                 model.train()
